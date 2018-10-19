@@ -1,0 +1,28 @@
+
+import org.apache.spark.ml.regression.IsotonicRegression
+
+// Loads data.
+val dataset = spark.read.format("libsvm")
+  .load("sample_isotonic_regression_libsvm_data.txt")
+
+// entrenamos a nuestro data set para dejalo listo para insertalo en el metedo
+val ir = new IsotonicRegression()
+val model = ir.fit(dataset)
+
+//Aqui es es donde empiezan la insercion de los datos, por ejemplo.
+//En el data set se pide un label, y un features para poder proceder
+//Label se convertira en x que es el dato que conocemos,
+//En el mismo metodo se creara una variable "no exitente" para poder hcer las
+//Las comparaciones del mismo
+//Aqui los siguientes datos se desplegaran sera el limite de los datos Y , X
+//y la preccion (la distancia de los dos numeros)
+
+println(s"Boundaries in increasing order: ${model.boundaries}\n")
+println(s"Predictions associated with the boundaries: ${model.predictions}\n")
+
+// Despues de esto , ya hacemos nuetra deduccion de los datos,
+//Pueden ser bastanates casos que se puede presentar en los datos,
+//En la documentacion explica alguno de ellos.
+//y mustramos el resultado
+
+model.transform(dataset).show()
