@@ -1,0 +1,256 @@
+scala> import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.SparkSession
+
+scala> import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.SparkSession
+
+scala>
+
+scala> import org.apache.log4j._
+import org.apache.log4j._
+
+scala> Logger.getLogger("org").setLevel(Level.ERROR)
+
+scala>
+
+scala> val spark = SparkSession.builder().getOrCreate()
+spark: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@65f5cae3
+
+scala>
+
+scala> val data  = spark.read.option("header","true").option("inferSchema", "true").format("csv").load("sale.csv")
+[Stage 0:>                                                                                                        data: org.apache.spark.sql.DataFrame = [Channel: int, Region: int ... 6 more fields]
+
+scala>
+
+scala> data.printSchema()
+root
+ |-- Channel: integer (nullable = true)
+ |-- Region: integer (nullable = true)
+ |-- Fresh: integer (nullable = true)
+ |-- Milk: integer (nullable = true)
+ |-- Grocery: integer (nullable = true)
+ |-- Frozen: integer (nullable = true)
+ |-- Detergents_Paper: integer (nullable = true)
+ |-- Delicassen: integer (nullable = true)
+
+
+scala>
+
+scala> data.head(1)
+res2: Array[org.apache.spark.sql.Row] = Array([2,3,12669,9656,7561,214,2674,1338])
+
+scala>
+
+scala> data.show()
++-------+------+-----+-----+-------+------+----------------+----------+
+|Channel|Region|Fresh| Milk|Grocery|Frozen|Detergents_Paper|Delicassen|
++-------+------+-----+-----+-------+------+----------------+----------+
+|      2|     3|12669| 9656|   7561|   214|            2674|      1338|
+|      2|     3| 7057| 9810|   9568|  1762|            3293|      1776|
+|      2|     3| 6353| 8808|   7684|  2405|            3516|      7844|
+|      1|     3|13265| 1196|   4221|  6404|             507|      1788|
+|      2|     3|22615| 5410|   7198|  3915|            1777|      5185|
+|      2|     3| 9413| 8259|   5126|   666|            1795|      1451|
+|      2|     3|12126| 3199|   6975|   480|            3140|       545|
+|      2|     3| 7579| 4956|   9426|  1669|            3321|      2566|
+|      1|     3| 5963| 3648|   6192|   425|            1716|       750|
+|      2|     3| 6006|11093|  18881|  1159|            7425|      2098|
+|      2|     3| 3366| 5403|  12974|  4400|            5977|      1744|
+|      2|     3|13146| 1124|   4523|  1420|             549|       497|
+|      2|     3|31714|12319|  11757|   287|            3881|      2931|
+|      2|     3|21217| 6208|  14982|  3095|            6707|       602|
+|      2|     3|24653| 9465|  12091|   294|            5058|      2168|
+|      1|     3|10253| 1114|   3821|   397|             964|       412|
+|      2|     3| 1020| 8816|  12121|   134|            4508|      1080|
+|      1|     3| 5876| 6157|   2933|   839|             370|      4478|
+|      2|     3|18601| 6327|  10099|  2205|            2767|      3181|
+|      1|     3| 7780| 2495|   9464|   669|            2518|       501|
++-------+------+-----+-----+-------+------+----------------+----------+
+only showing top 20 rows
+
+
+scala> import org.apache.spark.ml.clustering.KMeans
+import org.apache.spark.ml.clustering.KMeans
+
+scala>
+
+scala> mport org.apache.spark.ml.feature.{VectorAssembler, StringIndexer, VectorIndexer, OneHotEncoder}
+<console>:1: error: ';' expected but '.' found.
+mport org.apache.spark.ml.feature.{VectorAssembler, StringIndexer, VectorIndexer, OneHotEncoder}
+         ^
+
+scala> import org.apache.spark.ml.feature.{VectorAssembler, StringIndexer, VectorIndexer, OneHotEncoder}
+import org.apache.spark.ml.feature.{VectorAssembler, StringIndexer, VectorIndexer, OneHotEncoder}
+
+scala> import org.apache.spark.ml.feature.{VectorAssembler, StringIndexer, VectorIndexer, OneHotEncoder}
+import org.apache.spark.ml.feature.{VectorAssembler, StringIndexer, VectorIndexer, OneHotEncoder}
+
+scala> val assembler = (new VectorAssembler().setInputCols(Array("Fresh","Milk", "Grocery","Frozen","Detergents_Paper","Delicassen")).setOutputCol("features"))
+assembler: org.apache.spark.ml.feature.VectorAssembler = vecAssembler_fddad3aae14c
+
+scala> assembler: org.apache.spark.ml.feature.VectorAssembler = vecAssembler_2c42e5ca1936
+<console>:1: error: ';' expected but '=' found.
+assembler: org.apache.spark.ml.feature.VectorAssembler = vecAssembler_2c42e5ca1936
+                                                       ^
+
+scala> val assembler = (new VectorAssembler().setInputCols(Array("Fresh","Milk", "Grocery","Frozen","Detergents_Paper","Delicassen")).setOutputCol("features_data"))
+assembler: org.apache.spark.ml.feature.VectorAssembler = vecAssembler_257d2f702cb3
+
+scala> data.show()
++-------+------+-----+-----+-------+------+----------------+----------+
+|Channel|Region|Fresh| Milk|Grocery|Frozen|Detergents_Paper|Delicassen|
++-------+------+-----+-----+-------+------+----------------+----------+
+|      2|     3|12669| 9656|   7561|   214|            2674|      1338|
+|      2|     3| 7057| 9810|   9568|  1762|            3293|      1776|
+|      2|     3| 6353| 8808|   7684|  2405|            3516|      7844|
+|      1|     3|13265| 1196|   4221|  6404|             507|      1788|
+|      2|     3|22615| 5410|   7198|  3915|            1777|      5185|
+|      2|     3| 9413| 8259|   5126|   666|            1795|      1451|
+|      2|     3|12126| 3199|   6975|   480|            3140|       545|
+|      2|     3| 7579| 4956|   9426|  1669|            3321|      2566|
+|      1|     3| 5963| 3648|   6192|   425|            1716|       750|
+|      2|     3| 6006|11093|  18881|  1159|            7425|      2098|
+|      2|     3| 3366| 5403|  12974|  4400|            5977|      1744|
+|      2|     3|13146| 1124|   4523|  1420|             549|       497|
+|      2|     3|31714|12319|  11757|   287|            3881|      2931|
+|      2|     3|21217| 6208|  14982|  3095|            6707|       602|
+|      2|     3|24653| 9465|  12091|   294|            5058|      2168|
+|      1|     3|10253| 1114|   3821|   397|             964|       412|
+|      2|     3| 1020| 8816|  12121|   134|            4508|      1080|
+|      1|     3| 5876| 6157|   2933|   839|             370|      4478|
+|      2|     3|18601| 6327|  10099|  2205|            2767|      3181|
+|      1|     3| 7780| 2495|   9464|   669|            2518|       501|
++-------+------+-----+-----+-------+------+----------------+----------+
+only showing top 20 rows
+
+
+scala> val df = assembler.transform(data)
+df: org.apache.spark.sql.DataFrame = [Channel: int, Region: int ... 7 more fields]
+
+scala> df.show(5)
++-------+------+-----+----+-------+------+----------------+----------+--------------------+
+|Channel|Region|Fresh|Milk|Grocery|Frozen|Detergents_Paper|Delicassen|       features_data|
++-------+------+-----+----+-------+------+----------------+----------+--------------------+
+|      2|     3|12669|9656|   7561|   214|            2674|      1338|[12669.0,9656.0,7...|
+|      2|     3| 7057|9810|   9568|  1762|            3293|      1776|[7057.0,9810.0,95...|
+|      2|     3| 6353|8808|   7684|  2405|            3516|      7844|[6353.0,8808.0,76...|
+|      1|     3|13265|1196|   4221|  6404|             507|      1788|[13265.0,1196.0,4...|
+|      2|     3|22615|5410|   7198|  3915|            1777|      5185|[22615.0,5410.0,7...|
++-------+------+-----+----+-------+------+----------------+----------+--------------------+
+only showing top 5 rows
+
+
+scala> val ft = df.select(df("features"))
+org.apache.spark.sql.AnalysisException: Cannot resolve column name "features" among (Channel, Region, Fresh, Milk, Grocery, Frozen, Detergents_Paper, Delicassen, features_data);
+  at org.apache.spark.sql.Dataset$$anonfun$resolve$1.apply(Dataset.scala:222)
+  at org.apache.spark.sql.Dataset$$anonfun$resolve$1.apply(Dataset.scala:222)
+  at scala.Option.getOrElse(Option.scala:121)
+  at org.apache.spark.sql.Dataset.resolve(Dataset.scala:221)
+  at org.apache.spark.sql.Dataset.col(Dataset.scala:1241)
+  at org.apache.spark.sql.Dataset.apply(Dataset.scala:1208)
+  ... 53 elided
+
+scala> val ft = df.select(df("features_data"))
+ft: org.apache.spark.sql.DataFrame = [features_data: vector]
+
+scala> import org.apache.spark.ml.clustering.KMeans
+import org.apache.spark.ml.clustering.KMeans
+
+scala> //trains the k-means model
+
+scala> val kmeans = new KMeans().setK(3).setSeed(1L)
+kmeans: org.apache.spark.ml.clustering.KMeans = kmeans_fcaa4e8e0371
+
+scala> val model = kmeans.fit(ft)
+java.lang.IllegalArgumentException: Field "features" does not exist.
+Available fields: features_data
+  at org.apache.spark.sql.types.StructType$$anonfun$apply$1.apply(StructType.scala:267)
+  at org.apache.spark.sql.types.StructType$$anonfun$apply$1.apply(StructType.scala:267)
+  at scala.collection.MapLike$class.getOrElse(MapLike.scala:128)
+  at scala.collection.AbstractMap.getOrElse(Map.scala:59)
+  at org.apache.spark.sql.types.StructType.apply(StructType.scala:266)
+  at org.apache.spark.ml.util.SchemaUtils$.checkColumnType(SchemaUtils.scala:40)
+  at org.apache.spark.ml.clustering.KMeansParams$class.validateAndTransformSchema(KMeans.scala:93)
+  at org.apache.spark.ml.clustering.KMeans.validateAndTransformSchema(KMeans.scala:254)
+  at org.apache.spark.ml.clustering.KMeans.transformSchema(KMeans.scala:340)
+  at org.apache.spark.ml.PipelineStage.transformSchema(Pipeline.scala:74)
+  at org.apache.spark.ml.clustering.KMeans.fit(KMeans.scala:305)
+  ... 53 elided
+
+scala>
+
+scala> // Evaluate clustering by calculate Within Set Sum of Squared Errors.
+
+scala> val WSSE = model.computeCost(ft)
+<console>:36: error: not found: value model
+       val WSSE = model.computeCost(ft)
+                  ^
+
+scala> println(s"Within set sum of Squared Errors = $WSSE")
+<console>:35: error: not found: value WSSE
+       println(s"Within set sum of Squared Errors = $WSSE")
+                                                     ^
+
+scala>
+
+scala> // Show results
+
+scala> println("Cluster Centers: ")
+Cluster Centers:
+
+scala> model.clusterCenters.foreach(println)
+<console>:35: error: not found: value model
+       model.clusterCenters.foreach(println)
+       ^
+
+scala> val kmeans = new KMeans().setK(3).setSeed(1L)
+kmeans: org.apache.spark.ml.clustering.KMeans = kmeans_29947ce77138
+
+scala> val model = kmeans.fit(ft)
+java.lang.IllegalArgumentException: Field "features" does not exist.
+Available fields: features_data
+  at org.apache.spark.sql.types.StructType$$anonfun$apply$1.apply(StructType.scala:267)
+  at org.apache.spark.sql.types.StructType$$anonfun$apply$1.apply(StructType.scala:267)
+  at scala.collection.MapLike$class.getOrElse(MapLike.scala:128)
+  at scala.collection.AbstractMap.getOrElse(Map.scala:59)
+  at org.apache.spark.sql.types.StructType.apply(StructType.scala:266)
+  at org.apache.spark.ml.util.SchemaUtils$.checkColumnType(SchemaUtils.scala:40)
+  at org.apache.spark.ml.clustering.KMeansParams$class.validateAndTransformSchema(KMeans.scala:93)
+  at org.apache.spark.ml.clustering.KMeans.validateAndTransformSchema(KMeans.scala:254)
+  at org.apache.spark.ml.clustering.KMeans.transformSchema(KMeans.scala:340)
+  at org.apache.spark.ml.PipelineStage.transformSchema(Pipeline.scala:74)
+  at org.apache.spark.ml.clustering.KMeans.fit(KMeans.scala:305)
+  ... 53 elided
+
+scala> val assembler = (new VectorAssembler().setInputCols(Array("Fresh","Milk", "Grocery","Frozen","Detergents_Paper","Delicassen")).setOutputCol("features"))
+assembler: org.apache.spark.ml.feature.VectorAssembler = vecAssembler_26d300070d80
+
+scala> val df = assembler.transform(data)
+df: org.apache.spark.sql.DataFrame = [Channel: int, Region: int ... 7 more fields]
+
+scala> val ft = df.select(df("features"))
+ft: org.apache.spark.sql.DataFrame = [features: vector]
+
+scala> val model = kmeans.fit(ft)
+2018-11-09 18:22:02 WARN  BLAS:61 - Failed to load implementation from: com.github.fommil.netlib.NativeSystemBLAS
+2018-11-09 18:22:02 WARN  BLAS:61 - Failed to load implementation from: com.github.fommil.netlib.NativeRefBLAS
+model: org.apache.spark.ml.clustering.KMeansModel = kmeans_29947ce77138
+
+scala> val WSSE = model.computeCost(ft)
+WSSE: Double = 8.095172370767671E10
+
+scala> println(s"Within set sum of Squared Errors = $WSSE")
+Within set sum of Squared Errors = 8.095172370767671E10
+
+scala>
+
+scala> // Show results
+
+scala> println("Cluster Centers: ")
+Cluster Centers:
+
+scala> model.clusterCenters.foreach(println)
+[7993.574780058651,4196.803519061584,5837.4926686217,2546.624633431085,2016.2873900293255,1151.4193548387098]
+[9928.18918918919,21513.081081081084,30993.486486486487,2960.4324324324325,13996.594594594595,3772.3243243243246]
+[35273.854838709674,5213.919354838709,5826.096774193548,6027.6612903225805,1006.9193548387096,2237.6290322580644]
