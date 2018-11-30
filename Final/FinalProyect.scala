@@ -27,13 +27,17 @@
   val spark = SparkSession.builder().getOrCreate()
   //For example this CSV has alittle and big issue
   //if you load the csv without the .option("delimiter")all the dt will be a mess, you have to put that to proce ...
+  val DataF = spark.read.option("header","true").option("inferSchema","true").format("csv").load("bank-full.csv")
+  DataF.show()
   val DataF = spark.read.option("header","true").option("inferSchema","true").option("delimiter",";").format("csv").load("bank-full.csv")
+  DataFT.show()
   //Here, this cloumn webe are label, i can do in another way right, but for the moment this esenario is perfect
   //when the comand find a yes it will change for 1 and the same case in No it changes for 2
   val c1 = DataF.withColumn("y",when(col("y").equalTo("yes"),1).otherwise(col("y")))
   val c2 = c1.withColumn("y",when(col("y").equalTo("no"),2).otherwise(col("y")))
   //And now the column is still working like a string we need to changes that
   val c3 = c2.withColumn("y",'y.cast("Int"))
+  c3.show(1)
   //Using the VectorAssembler is more easy to create the features, only you have to do is select all the cloumns you need
   val assemFeatures = (new VectorAssembler().setInputCols(Array("balance","day","duration","pdays","previous")).setOutputCol("features"))
   val Limdf = assemFeatures.transform(c3)
@@ -79,8 +83,8 @@ val mlrModel = mlr.fit(ft)
 // Print the coefficients and intercepts for logistic regression with multinomial family
 println(s"Multinomial coefficients: ${mlrModel.coefficientMatrix}")
 println(s"Multinomial intercepts: ${mlrModel.interceptVector}")
-Threes
-DONE
+//Threes
+//DONE
 // Index labels, adding metadata to the label column.
 // Fit on whole dataset to include all labels in index.
 val labelIndexer = new StringIndexer().setInputCol("label").setOutputCol("indexedLabel").fit(ft)
@@ -107,8 +111,8 @@ println(s"Test Error = ${(1.0 - accuracy)}")
 
 val treeModel = model.stages(2).asInstanceOf[DecisionTreeClassificationModel]
 println(s"Learned classification tree model:\n ${treeModel.toDebugString}")
-SVM
-DONE
+//SVM
+//DONE
 //We have to do this first beacuse the algoritm only accept binary types in the label column so this is the code to do that
 val cs1 = ft.withColumn("1abel",when(col("label").equalTo("1"),0).otherwise(col("label")))
 val cs2 = cs1.withColumn("label",when(col("label").equalTo("2"),1).otherwise(col("label")))
